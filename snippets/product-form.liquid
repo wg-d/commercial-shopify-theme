@@ -608,12 +608,35 @@
   
   {% endif %}
   {% comment %}Inject @pixelunion/shopify-variants-ui/variants-ui end{% endcomment %}
-
-
+  {% assign instructions = product.metafields.instructions %}
+  {% assign ancho = instructions['Formato del rollo'] %}
   <div class="product-form--atc">
+    {% if product.title contains 'Alfombra' or product.title contains 'Pasto Sintético' %}
+    {% unless product.title contains 'Instalación de' %}
+      <div style="width: 100%; margin-bottom: 10px;">
+        <div style="width: 100%; display: flex; justify-content: space-around; margin-bottom: 10px;">
+          <p style="font-size: 1.4rem; margin-bottom: 0px;">Ancho</p>
+          <p style="font-size: 1.4rem; margin-bottom: 0px;">Largo</p>
+        </div>
+        <div style="width: 100%; display: flex; justify-content: space-between;">
+          <div class="product-form--atc-input-wrapper" style="width: 46%;">
+            <input style="width: 100%; height: 1.8rem; border-radius: 3px;border: 1px solid black;">
+            <p id="size-input-background-letter">&#13217;</p>
+          </div>
+          <span style="width: 8%; font-size: 1.4rem; display:flex;justify-content: center; vertical-align: middle;">&#215;</span>
+          <div class="product-form--atc-input-wrapper" style="width: 46%;">
+            <input style="width: 100%; height: 1.8rem; border-radius: 3px; border: 1px solid black;">
+            <p id="size-input-background-letter">&#13217;</p>
+          </div>
+        </div>
+      </div>
+      <div style="clear:both"></div>
+    {%endunless%}
+    {% endif %}
     <div class="product-form--atc-qty form-fields--qty" id="product-form-atc-qty-id" data-quantity-wrapper>
       <div class="form-field form-field--qty-select">
         <div class="form-field-select-wrapper">
+
           <select
             id="product-quantity-select"
             class="form-field-input form-field-select"
