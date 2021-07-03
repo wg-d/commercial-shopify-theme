@@ -612,32 +612,30 @@
   {% assign ancho = instructions['Formato del rollo'] %}
   <div class="product-form--atc">
     {% if product.title contains 'Alfombra' or product.title contains 'Pasto Sintético' %}
-    {% unless product.title contains 'Instalación de' %}
-      <div style="width: 100%; margin-bottom: 10px;">
-        <div style="width: 100%; display: flex; justify-content: space-around; margin-bottom: 10px;">
-          <p style="font-size: 1.4rem; margin-bottom: 0px;">Ancho</p>
-          <p style="font-size: 1.4rem; margin-bottom: 0px;">Largo</p>
-        </div>
-        <div style="width: 100%; display: flex; justify-content: space-between;">
-          <div class="product-form--atc-input-wrapper" style="width: 46%;">
-            <input type="text" value={{ancho|slice:0}} disabled=true style="text-align:center;color: black; width: 100%;  font-size: 1.8rem; border-radius: 3px;border: 1px solid black;">
-            <p id="size-input-background-letter">&#13217;</p>
-            <p style="font-size: 1rem;">{{ancho}}</p>
+      {% unless product.title contains 'Instalación de' %}
+        <div style="width: 100%; margin-bottom: 10px;">
+          <div style="width: 100%; display: flex; justify-content: space-around; margin-bottom: 10px;">
+            <p style="font-size: 1.4rem; margin-bottom: 0px;">Ancho</p>
+            <p style="font-size: 1.4rem; margin-bottom: 0px;">Largo</p>
           </div>
-          <span style="width: 8%; font-size: 1.4rem; display:flex;justify-content: center; vertical-align: middle;">&#215;</span>
-          <div class="product-form--atc-input-wrapper" style="width: 46%;">
-            <input style="text-align:center; padding-right: 50px; width: 100%; font-size: 1.8rem; border-radius: 3px; border: 1px solid black;">
-            <p id="size-input-background-letter">&#13217;</p>
+          <div style="width: 100%; display: flex; justify-content: space-between;">
+            <div class="product-form--atc-input-wrapper" style="width: 46%;">
+              <input id="product-form--ancho" type="text"  disabled=true style="text-align:center;color: black; width: 100%;  font-size: 1.8rem; border-radius: 3px;border: 1px solid black;" value={{ancho|slice:0}}>
+              <p id="size-input-background-letter">m</p>
+            </div>
+            <span style="width: 8%; font-size: 1.4rem; display:flex;justify-content: center; vertical-align: middle;">&#215;</span>
+            <div class="product-form--atc-input-wrapper" style="width: 46%;">
+              <input id="product-form--largo" style="text-align:center; padding-right: 50px; width: 100%; font-size: 1.8rem; border-radius: 3px; border: 1px solid black;">
+              <p id="size-input-background-letter">m</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div style="clear:both"></div>
-    {%endunless%}
+        <div style="clear:both"></div>
+      {%endunless%}
     {% endif %}
     <div class="product-form--atc-qty form-fields--qty" id="product-form-atc-qty-id" data-quantity-wrapper>
       <div class="form-field form-field--qty-select">
         <div class="form-field-select-wrapper">
-
           <input
             id="product-quantity-select"
             class="form-field-input form-field-select"
@@ -645,6 +643,7 @@
             data-quantity-select
           >
           <label
+            id="product-quantity-select-label"
             for="product-quantity-select"
             class="form-field-title"
           >
@@ -753,16 +752,32 @@
     return str.split('Caja')[1];
     }
     $(document).ready(function(){
-      
+
+      $("#product-form--largo").on("input", function(){
+        var largo_str = $("#product-form--largo").val().replace(',','.');
+        var ancho_str = $("#product-form--ancho").val();
+        $("#product-quantity-select").val(((largo_str*ancho_str).toFixed(2)).toString().replace('.',','));
+        $("#product-quantity-select-label").css({'top':'0.5rem', 'font-size':'0.8125rem'});
+      })
+
+      $("#product-quantity-select").on("input", function(){
+        var quantity_str = $("#product-quantity-select").val().replace(',','.');
+        var ancho_str = $("#product-form--ancho").val();
+        $("#product-form--largo").val(((quantity_str/ancho_str).toFixed(2).toString().replace('.',',')));
+      })
+
       $(".product-description-title").click(function() {
       	$(".product-description").toggleClass('hidden');
         $(this).toggleClass('title-active');
       });
+
       $(".metafield-data-title").click(function() {
       	$(".metafield-data").toggleClass('hidden');
         $(this).toggleClass('title-active');
       });      
+
       var title_holder = $(".product-title").text();
+
       if(title_holder.indexOf("Instalación") >= 0) {
         $(".product-description-content").css({'border':'none', 'margin-top':'0'});
       }
