@@ -620,7 +620,10 @@
           </div>
           <div style="width: 100%; display: flex; justify-content: space-between;">
             <div class="product-form--atc-input-wrapper" style="width: 46%;">
-              <input id="product-form--ancho" type="text"  disabled=true style="text-align:center;color: black; width: 100%;  font-size: 1.8rem; border-radius: 3px;border: 1px solid black;" value={{ancho|slice:0}}>
+              <input id="product-form--ancho" 
+              type="text"  disabled=true 
+              style="text-align:center;color: black; width: 100%;  font-size: 1.8rem; border-radius: 3px;border: 1px solid black;"
+              value={{ancho|slice:0}}>
               <p id="size-input-background-letter">m</p>
             </div>
             <span style="width: 8%; font-size: 1.4rem; display:flex;justify-content: center; vertical-align: middle;">&#215;</span>
@@ -636,20 +639,50 @@
     <div class="product-form--atc-qty form-fields--qty" id="product-form-atc-qty-id" data-quantity-wrapper>
       <div class="form-field form-field--qty-select">
         <div class="form-field-select-wrapper">
-          <input
+          {% if product.title contains 'Alfombra' or product.title contains 'Pasto Sintético' %}
+          {% unless product.title contains 'Instalación de' %}         
+            <input
+              id="product-quantity-select"
+              class="form-field-input form-field-select"
+              aria-label="{{ 'general.general.quantity' | t }}"
+              data-quantity-select
+            >
+            <label
+            id="product-quantity-select-label"
+            for="product-quantity-select"
+            class="form-field-title"
+            >
+            {{ 'general.general.quantity' | t }}
+            </label>
+            {% render 'icon-chevron-down-small' %}
+          {% endunless%}
+          {% endif%}
+          {% if product.title contains 'Instalación de' %}
+            <select
             id="product-quantity-select"
             class="form-field-input form-field-select"
             aria-label="{{ 'general.general.quantity' | t }}"
             data-quantity-select
-          >
-          <label
+            >
+            {% for i in (1..9) %}
+              <option {% if i == 1 %}selected {% endif %}value="{{ i }}">
+                {{ i }}
+              </option>
+            {% endfor %}
+            <option value="10+">
+              10+
+            </option>
+            </select>
+            <label
             id="product-quantity-select-label"
             for="product-quantity-select"
             class="form-field-title"
-          >
-            {{ 'general.general.quantity' | t }}
-          </label>
-          <!-- {% render 'icon-chevron-down-small' %} -->
+            >
+              {{ 'general.general.quantity' | t }}
+            </label>
+            {% render 'icon-chevron-down-small' %}
+          {% endif %}
+
         </div>
       </div>
       <div class="form-field form-field--qty-input hidden">
@@ -755,21 +788,22 @@
     return str.split('Caja')[1];
     }
     $(document).ready(function(){
-
       $("#product-form--largo").on("input", function(){
         $("#product-quantity-select").val(""); 
         largo_str = $("#product-form--largo").val().replace(',','.');
         ancho_str = $("#product-form--ancho").val();
-        $("#product-quantity-select").val(((largo_str*ancho_str).toFixed(2)).toString().replace('.',','));
+        $("#product-quantity-select").val(((largo_str*ancho_str).toFixed(2)));
         $("#product-quantity-select-label").css({'top':'0.5rem', 'font-size':'0.8125rem'});
         $("#product-quantity-input").val(((largo_str*ancho_str).toFixed(2)).toString().replace('.',','));
-      })
+      }) 
+
       $("#product-quantity-input").on("input",function(){
         $("#product-form--largo").val(""); 
         quantity_str = $("#product-quantity-input").val().replace(',','.');
         ancho_str = $("#product-form--ancho").val();
         $("#product-form--largo").val(((quantity_str/ancho_str).toFixed(2).toString().replace('.',',')));
       })
+
       $("#product-quantity-select").on("input", function(){
         $("#product-form--largo").val(""); 
         quantity_str = $("#product-quantity-select").val().replace(',','.');
