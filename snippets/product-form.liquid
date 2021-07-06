@@ -658,21 +658,12 @@
           {% endunless%}
           {% endif%}
           {% if product.title contains 'Instalación de' %}
-            <select
+            <input
             id="product-quantity-select"
             class="form-field-input form-field-select"
             aria-label="{{ 'general.general.quantity' | t }}"
             data-quantity-select
             >
-            {% for i in (1..9) %}
-              <option {% if i == 1 %}selected {% endif %}value="{{ i }}">
-                {{ i }}
-              </option>
-            {% endfor %}
-            <option value="10+">
-              10+
-            </option>
-            </select>
             <label
             id="product-quantity-select-label"
             for="product-quantity-select"

@@ -230,7 +230,17 @@
     {% endif %}
   </section>
 </form>
-
+<script>
+  $(document).ready(function(){
+    $('#cart-largo').text($(".form-field-quantity-select").val());
+    $(".form-field-quantity-select").on('input',function(){
+      $('#cart-largo').text($(".form-field-quantity-select").val());
+    })
+    $(".form-field-quantity-select").on("input", function() {
+      console.log($(this).prop('id'));
+    })
+  })
+</script>
 {% schema %}
 {
   "name": "Cart page",

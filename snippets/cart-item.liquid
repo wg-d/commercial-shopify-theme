@@ -11,8 +11,7 @@
 {%- if item.line_level_discount_allocations.size > 0 -%}
   {%- assign item_has_discounts = true -%}
 {%- endif -%}
-{% assign instructions = item.product.metafields.instructions %}
-{% assign ancho = instructions['Formato del rollo'] %}
+
 <li
   class="cart-item"
   data-cartitem
@@ -76,16 +75,6 @@
             {{ item.original_price | money }}
           {%- endif %}
         </span>
-        {%if item.product.title contains 'Alfombra' or item.product.title contains 'Pasto Sintético'%}
-          {% unless item.product.title contains 'Instalación de' %}
-            <p style="font-size: 1rem;">Here</p>
-            <div style="display: flex; font-size: 1rem;">
-              <p style="font-size: 1rem;">{{ancho|slice:0}}</p>
-              <p>&#215;</p>
-              <p id="cart-largo"></p>
-            </div>
-          {% endunless%}
-        {%endif%}
       </div>
 
       {% capture total_quantity %}<span class="cart-item--total-quantity" data-total-quantity>{{ item.unit_price_measurement.quantity_value }}{{ item.unit_price_measurement.quantity_unit }}</span>{% endcapture %}
