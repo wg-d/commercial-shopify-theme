@@ -630,8 +630,8 @@
             <div class="product-form--atc-input-wrapper" style="width: 46%;">
               <select id="product-form--largo" style="text-align:center; padding-right: 50px; width: 100%; font-size: 1.8rem; border-radius: 3px; border: 1px solid black;">
                 {% for i in (1..50) %}
-                <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
-                  {{ i }}
+                <option>
+                  {{ i| divided_by: 2.0 }}
                 </option>
               {% endfor %}
               </select>
@@ -798,26 +798,26 @@
     }
     $(document).ready(function(){
       $("#product-form--largo").change(function(){
-        // $("#product-quantity-select").val(""); 
+        // $("#product-quantity-select").val("");
         largo_str = $("#product-form--largo").val().replace(',','.');
         ancho_str = $("#product-form--ancho").val();
-        $("#product-quantity-select").val(((largo_str*ancho_str).toFixed(2)));
+        $("#product-quantity-select").val(largo_str*ancho_str);
+        $("#product-quantity-input").val(largo_str*ancho_str);
         $("#product-quantity-select-label").css({'top':'0.5rem', 'font-size':'0.8125rem'});
-        $("#product-quantity-input").val(((largo_str*ancho_str).toFixed(2)).toString().replace('.',','));
+        $("#product-quantity-input").val(largo_str*ancho_str);
       }) 
 
       $("#product-quantity-input").change(function(){
         // $("#product-form--largo").val(""); 
-        quantity_str = $("#product-quantity-input").val().replace(',','.');
         ancho_str = $("#product-form--ancho").val();
-        $("#product-form--largo").val(((quantity_str/ancho_str).toFixed(2).toString().replace('.',',')));
+        $("#product-form--largo").val(quantity_str/ancho_str);
       })
 
       $("#product-quantity-select").change(function(){
         // $("#product-form--largo").val(""); 
         quantity_str = $("#product-quantity-select").val();
         ancho_str = $("#product-form--ancho").val();
-        $("#product-form--largo").val(((quantity_str/ancho_str).toFixed(2).toString().replace('.',',')));
+        $("#product-form--largo").val(quantity_str/ancho_str);
       })
 
       $(".product-description-title").click(function() {
