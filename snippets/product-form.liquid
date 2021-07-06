@@ -628,7 +628,13 @@
             </div>
             <span style="width: 8%; font-size: 1.4rem; display:flex;justify-content: center; vertical-align: middle;">&#215;</span>
             <div class="product-form--atc-input-wrapper" style="width: 46%;">
-              <input id="product-form--largo" style="text-align:center; padding-right: 50px; width: 100%; font-size: 1.8rem; border-radius: 3px; border: 1px solid black;">
+              <select id="product-form--largo" style="text-align:center; padding-right: 50px; width: 100%; font-size: 1.8rem; border-radius: 3px; border: 1px solid black;">
+                {% for i in (1..50) %}
+                <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+                  {{ i }}
+                </option>
+              {% endfor %}
+              </select>
               <p id="size-input-background-letter">m</p>
             </div>
           </div>
@@ -641,12 +647,18 @@
         <div class="form-field-select-wrapper">
           {% if product.title contains 'Alfombra' or product.title contains 'Pasto Sintético' %}
           {% unless product.title contains 'Instalación de' %}         
-            <input
+            <select
               id="product-quantity-select"
               class="form-field-input form-field-select"
               aria-label="{{ 'general.general.quantity' | t }}"
               data-quantity-select
             >
+            {% for i in (1..100) %}
+            <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+              {{ i }}
+            </option>
+          {% endfor %}
+            </select>
             <label
             id="product-quantity-select-label"
             for="product-quantity-select"
@@ -677,7 +689,7 @@
         </div>
       </div>
       <div class="form-field form-field--qty-input hidden">
-        <input
+        <select
           id="product-quantity-input"
           class="form-field-input form-field-number form-field-filled"
           value="1"
@@ -687,6 +699,12 @@
           aria-label="{{ 'general.general.quantity' | t }}"
           data-quantity-input
         >
+        {% for i in (1..100) %}
+        <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+          {{ i }}
+        </option>
+      {% endfor %}
+        </select>
         <label
           for="product-quantity-input"
           class="form-field-title"
@@ -779,8 +797,8 @@
     return str.split('Caja')[1];
     }
     $(document).ready(function(){
-      $("#product-form--largo").on("input", function(){
-        $("#product-quantity-select").val(""); 
+      $("#product-form--largo").change(function(){
+        // $("#product-quantity-select").val(""); 
         largo_str = $("#product-form--largo").val().replace(',','.');
         ancho_str = $("#product-form--ancho").val();
         $("#product-quantity-select").val(((largo_str*ancho_str).toFixed(2)));
@@ -788,16 +806,16 @@
         $("#product-quantity-input").val(((largo_str*ancho_str).toFixed(2)).toString().replace('.',','));
       }) 
 
-      $("#product-quantity-input").on("input",function(){
-        $("#product-form--largo").val(""); 
+      $("#product-quantity-input").change(function(){
+        // $("#product-form--largo").val(""); 
         quantity_str = $("#product-quantity-input").val().replace(',','.');
         ancho_str = $("#product-form--ancho").val();
         $("#product-form--largo").val(((quantity_str/ancho_str).toFixed(2).toString().replace('.',',')));
       })
 
-      $("#product-quantity-select").on("input", function(){
-        $("#product-form--largo").val(""); 
-        quantity_str = $("#product-quantity-select").val().replace(',','.');
+      $("#product-quantity-select").change(function(){
+        // $("#product-form--largo").val(""); 
+        quantity_str = $("#product-quantity-select").val();
         ancho_str = $("#product-form--ancho").val();
         $("#product-form--largo").val(((quantity_str/ancho_str).toFixed(2).toString().replace('.',',')));
       })
