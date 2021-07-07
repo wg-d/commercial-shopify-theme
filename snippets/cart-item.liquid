@@ -139,20 +139,6 @@
         </div>
 
         <div class="form-field form-field--qty-input {% if item.quantity < 10 %}hidden{% else %}visible{% endif %}">
-          <!-- <input
-            class="form-field-input form-field-number form-field-filled"
-            value="{{ item.quantity }}"
-            name="updates[]"
-            id="updates_{{ item.key }}"
-            type="text"
-            pattern="\d*"
-            {% if item.quantity < 10 %}tabindex="-1"{% endif %}
-            aria-label="{{ 'general.general.quantity' | t }}"
-            data-quantity-input
-            data-cartitem-quantity> -->
-          <!-- <label class="form-field-title" for="updates_{{ item.key }}">
-            {{ 'general.general.quantity' | t }}
-          </label> -->
           <select
           class="form-field-input form-field-number form-field-filled"
           value="{{ item.quantity }}"
