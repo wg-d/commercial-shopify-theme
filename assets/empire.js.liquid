@@ -128,7 +128,7 @@ function onChange(callback) {
     if (callbacks.indexOf(callback) === -1) {
         callbacks.push(callback);
     }
-}
+  }
 exports.onChange = onChange;
 /**
  * Removes an event listener to be called when a breakpoint changes
@@ -141,6 +141,8 @@ function offChange(callback) {
     if (index !== -1) {
         callbacks.splice(index, 1);
     }
+    alert('here');
+
 }
 exports.offChange = offChange;
 var currentMin = function (breakpointName) { return breakpoints.current.min(breakpointName); };

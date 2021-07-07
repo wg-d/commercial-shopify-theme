@@ -620,11 +620,11 @@
           </div>
           <div style="width: 100%; display: flex; justify-content: space-between;">
             <div class="product-form--atc-input-wrapper" style="width: 46%;">
+              {% assign ancho_val = ancho|slice:0%}
               <input id="product-form-ancho" 
               type="text"  disabled=true 
               style="text-align:center;color: black; width: 100%;  font-size: 1.8rem; border-radius: 3px;border: 1px solid black;"
-              {% assign ancho_val = ancho|slice:0%}
-              value={% if ancho_val!=""%}{% continue %}{%else%}{{"4"}}{%endif%}>
+              value={% if ancho_val == "" %}{{"4"}}{% else %}{{ ancho_val}}{% endif %}>
               <p id="size-input-background-letter">m</p>
             </div>
             <span style="width: 8%; font-size: 1.4rem; display:flex;justify-content: center; vertical-align: middle;">&#215;</span>

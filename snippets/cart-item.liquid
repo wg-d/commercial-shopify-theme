@@ -1,5 +1,7 @@
 {% assign compare_at_price = 0 %}
-
+{% assign instructions = item.product.metafields.instructions %}
+{% assign ancho = instructions['Formato del rollo'] %}
+{% assign key_str_quantity = item.key | replace: ':', '_' %}
 {% for variant in item.product.variants %}
   {% if variant.id == item.variant.id and variant.compare_at_price > item.price %}
     {% assign compare_at_price = variant.compare_at_price %}
@@ -76,7 +78,9 @@
           {%- endif %}
         </span>
       </div>
-
+      <div class="cart-item--dimensions">
+        <h4>{{ ancho | slice:0}}<span>&#215;</span><span id="largo_{{item.key}}"></span></h4>
+      </div>
       {% capture total_quantity %}<span class="cart-item--total-quantity" data-total-quantity>{{ item.unit_price_measurement.quantity_value }}{{ item.unit_price_measurement.quantity_unit }}</span>{% endcapture %}
       {% capture unit_price %}<span class="cart-item--unit-price-amount money" data-unit-price-amount>{{ item.unit_price | money }}</span>{% endcapture %}
       {% capture unit_measure %}<span class="cart-item--unit-price-measure" data-unit-price-measure>{%- if item.unit_price_measurement.reference_value != 1 -%}{{ item.unit_price_measurement.reference_value }}{%- endif %}{{ item.unit_price_measurement.reference_unit }}</span>{% endcapture %}
@@ -110,8 +114,7 @@
         </div>
       {% endif %}
     </div>
-    {% assign instructions = item.product.metafields.instructions %}
-    {% assign ancho = instructions['Formato del rollo'] %}
+
     <div class="cart-item--info">
       <div
         class="cart-item--quantity form-fields--qty"
@@ -120,7 +123,7 @@
         <div class="form-field form-field--qty-select {% if item.quantity < 10 %}visible{% else %}hidden{% endif %}">
           <div class="form-field-select-wrapper">
             <select
-            class="form-field-input form-field-select form-field-filled" 
+            class="form-field-input form-field-select form-field-filled form-field-input-select" 
             id="quantity_{{ item.key | replace: ':', '_' }}"
             aria-label="{{ 'general.general.quantity' | t }}"
             data-quantity-select
@@ -140,22 +143,8 @@
         </div>
 
         <div class="form-field form-field--qty-input {% if item.quantity < 10 %}hidden{% else %}visible{% endif %}">
-          <!-- <input
-            class="form-field-input form-field-number form-field-filled"
-            value="{{ item.quantity }}"
-            name="updates[]"
-            id="updates_{{ item.key }}"
-            type="text"
-            pattern="\d*"
-            {% if item.quantity < 10 %}tabindex="-1"{% endif %}
-            aria-label="{{ 'general.general.quantity' | t }}"
-            data-quantity-input
-            data-cartitem-quantity>
-          <label class="form-field-title" for="updates_{{ item.key }}">
-            {{ 'general.general.quantity' | t }}
-          </label> -->
           <select
-          class="form-field-input form-field-number form-field-filled"
+          class="form-field-input form-field-number form-field-filled form-field-input-select"
           value="{{ item.quantity }}"
           name="updates[]"
           id="updates_{{ item.key }}"
@@ -200,6 +189,7 @@
           <span class="visually-hidden">{{ 'product_price.price.current' | t }}</span>
         {%- endif -%}
         <div
+          id="money_{{item.key}}"
           class="money {% if item_has_discounts %}cart-item--discount-price{% endif %}"
           aria-live="polite"
           data-cartitem-total
@@ -222,4 +212,19 @@
 
     </div>
   </div>
+  <script>
+    $(document).ready(function(){
+      var str_key = {{item.key | json }};
+      var val_ancho = {{ ancho | slice:0 | json }};
+      $('[id="'+"largo_"+str_key+'"]').text($(this).val()/val_ancho);
+
+      $('.form-field-input-select').change(function(){
+        $('[id="'+"largo_"+str_key+'"]').text($(this).val()/val_ancho);
+      })
+      
+      $('[id="'+"money_"+str_key+'"]').bind('DOMSubtreeModified', function(){
+        $('[id="'+"largo_"+str_key+'"]').text($('.form-field-input-select').val()/val_ancho);
+      });
+    })
+  </script>
 </li>
