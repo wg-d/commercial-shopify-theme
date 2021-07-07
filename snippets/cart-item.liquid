@@ -110,7 +110,8 @@
         </div>
       {% endif %}
     </div>
-
+    {% assign instructions = item.product.metafields.instructions %}
+    {% assign ancho = instructions['Formato del rollo'] %}
     <div class="cart-item--info">
       <div
         class="cart-item--quantity form-fields--qty"
@@ -126,9 +127,9 @@
             data-cartitem-quantity
             >
               {% for i in (2..50) %}
-                    <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
-                      {{ i }}
-                    </option>
+                <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+                  {{ i }}
+                </option>
               {% endfor %}
             </select>
             <label class="form-field-title" for="quantity_{{ item.key | replace: ':', '_' }}">
@@ -165,11 +166,25 @@
           data-quantity-input
           data-cartitem-quantity
           >
+          {% assign wid = ancho|slice:0 %}
+          {% if wid == '2' %}
             {% for i in (2..50) %}
-                    <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
-                      {{ i }}
-                    </option>
+              <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+                {{ i }}
+              </option>
+            {% endfor %}
+            {% else%}
+              {% for i in (4..100) %}
+                {% assign mod = i | modulo:2%}
+                {% if mod == 0%}
+                <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+                  {{ i }}
+                </option>
+                {% else%}
+                  {% continue %}
+                {%endif%}
               {% endfor %}
+          {% endif %} %}
           </select>
           <label class="form-field-title" for="updates_{{ item.key }}">
             {{ 'general.general.quantity' | t }}
