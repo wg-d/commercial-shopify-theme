@@ -218,10 +218,12 @@
       var val_ancho = {{ ancho | slice:0 | json }};
       $('[id="'+"largo_"+str_key+'"]').text($(this).val()/val_ancho);
 
-      $('.form-field-input-select').change(function(){
+      // $('.form-field-input-select').change(function(){
+      //   $('[id="'+"largo_"+str_key+'"]').text($(this).val()/val_ancho);
+      // })
+      $('[id="'+"updates_"+str_key+'"]').change(function(){
         $('[id="'+"largo_"+str_key+'"]').text($(this).val()/val_ancho);
       })
-      
       $('[id="'+"money_"+str_key+'"]').bind('DOMSubtreeModified', function(){
         $('[id="'+"largo_"+str_key+'"]').text($('.form-field-input-select').val()/val_ancho);
       });
