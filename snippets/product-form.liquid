@@ -620,7 +620,7 @@
           </div>
           <div style="width: 100%; display: flex; justify-content: space-between;">
             <div class="product-form--atc-input-wrapper" style="width: 46%;">
-              <input id="product-form--ancho" 
+              <input id="product-form-ancho" 
               type="text"  disabled=true 
               style="text-align:center;color: black; width: 100%;  font-size: 1.8rem; border-radius: 3px;border: 1px solid black;"
               value={{ancho|slice:0}}>
@@ -628,12 +628,20 @@
             </div>
             <span style="width: 8%; font-size: 1.4rem; display:flex;justify-content: center; vertical-align: middle;">&#215;</span>
             <div class="product-form--atc-input-wrapper" style="width: 46%;">
-              <select id="product-form--largo" style="text-align:center; padding-right: 50px; width: 100%; font-size: 1.8rem; border-radius: 3px; border: 1px solid black;">
-                {% for i in (1..50) %}
-                <option>
-                  {{ i| divided_by: 2.0 }}
-                </option>
-              {% endfor %}
+              <select id="product-form-largo" style="text-align:center; padding-right: 50px; width: 100%; font-size: 1.8rem; border-radius: 3px; border: 1px solid black;">
+                {% for i in (2..50) %}
+                  {% assign rm_zero = i %}
+                  {% assign mod = i| modulo: 2%}
+                  {% if mod == 0 %}
+                    <option>
+                      {{ rm_zero| divided_by: 2.0 | round}}
+                    </option>
+                  {% else %}
+                  <option>
+                    {{ rm_zero| divided_by: 2.0 }}
+                  </option>
+                  {%endif%}
+               {% endfor %}
               </select>
               <p id="size-input-background-letter">m</p>
             </div>
@@ -646,28 +654,42 @@
       <div class="form-field form-field--qty-select">
         <div class="form-field-select-wrapper">
           {% if product.title contains 'Alfombra' or product.title contains 'Pasto Sintético' %}
-          {% unless product.title contains 'Instalación de' %}         
-            <select
-              id="product-quantity-select"
-              class="form-field-input form-field-select"
-              aria-label="{{ 'general.general.quantity' | t }}"
-              data-quantity-select
-            >
-            {% for i in (1..100) %}
-            <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
-              {{ i }}
-            </option>
-          {% endfor %}
-            </select>
-            <label
-            id="product-quantity-select-label"
-            for="product-quantity-select"
-            class="form-field-title"
-            >
-            {{ 'general.general.quantity' | t }}
-            </label>
-            {% render 'icon-chevron-down-small' %}
-          {% endunless%}
+            {% unless product.title contains 'Instalación de' %}         
+              <select
+                id="product-quantity-select"
+                class="form-field-input form-field-select"
+                aria-label="{{ 'general.general.quantity' | t }}"
+                data-quantity-select
+              >
+                {% assign wid = ancho|slice:0 %}
+                {% if wid == '2' %}
+                  {% for i in (2..50) %}
+                    <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+                      {{ i }}
+                    </option>
+                  {% endfor %}
+                  {% else%}
+                    {% for i in (4..100) %}
+                      {% assign mod = i | modulo:2%}
+                      {% if mod == 0%}
+                      <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+                        {{ i }}
+                      </option>
+                      {% else%}
+                        {% continue %}
+                      {%endif%}
+                    {% endfor %}
+                {% endif %} 
+              </select>
+              <label
+              id="product-quantity-select-label"
+              for="product-quantity-select"
+              class="form-field-title"
+              >
+                {{ 'general.general.quantity' | t }}
+              </label>
+              {% render 'icon-chevron-down-small' %}
+            {% endunless%}
           {% endif%}
           {% if product.title contains 'Instalación de' %}
             <input
@@ -699,11 +721,25 @@
           aria-label="{{ 'general.general.quantity' | t }}"
           data-quantity-input
         >
-        {% for i in (1..100) %}
-        <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
-          {{ i }}
-        </option>
-      {% endfor %}
+        {% assign wid = ancho|slice:0 %}
+        {% if wid == '2' %}
+          {% for i in (2..50) %}
+            <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+              {{ i }}
+            </option>
+          {% endfor %}
+          {% else%}
+            {% for i in (4..100) %}
+              {% assign mod = i | modulo:2%}
+              {% if mod == 0%}
+              <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+                {{ i }}
+              </option>
+              {% else%}
+                {% continue %}
+              {%endif%}
+            {% endfor %}
+        {% endif %} %}
         </select>
         <label
           for="product-quantity-input"
@@ -797,10 +833,10 @@
     return str.split('Caja')[1];
     }
     $(document).ready(function(){
-      $("#product-form--largo").change(function(){
+      $("#product-form-largo").change(function(){
         // $("#product-quantity-select").val("");
-        largo_str = $("#product-form--largo").val().replace(',','.');
-        ancho_str = $("#product-form--ancho").val();
+        largo_str = $("#product-form-largo").val();
+        ancho_str = $("#product-form-ancho").val();
         $("#product-quantity-select").val(largo_str*ancho_str);
         $("#product-quantity-input").val(largo_str*ancho_str);
         $("#product-quantity-select-label").css({'top':'0.5rem', 'font-size':'0.8125rem'});
@@ -808,16 +844,17 @@
       }) 
 
       $("#product-quantity-input").change(function(){
-        // $("#product-form--largo").val(""); 
-        ancho_str = $("#product-form--ancho").val();
-        $("#product-form--largo").val(quantity_str/ancho_str);
+        // $("#product-form-largo").val(""); 
+        quantity_str = $("#product-quantity-input").val();
+        ancho_str = $("#product-form-ancho").val();
+        $("#product-form-largo").val(quantity_str/ancho_str*1.0);
       })
 
       $("#product-quantity-select").change(function(){
-        // $("#product-form--largo").val(""); 
+        // $("#product-form-largo").val(""); 
         quantity_str = $("#product-quantity-select").val();
-        ancho_str = $("#product-form--ancho").val();
-        $("#product-form--largo").val(quantity_str/ancho_str);
+        ancho_str = $("#product-form-ancho").val();
+        $("#product-form-largo").val(quantity_str/ancho_str*1.0);
       })
 
       $(".product-description-title").click(function() {

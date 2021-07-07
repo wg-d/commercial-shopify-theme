@@ -119,20 +119,17 @@
         <div class="form-field form-field--qty-select {% if item.quantity < 10 %}visible{% else %}hidden{% endif %}">
           <div class="form-field-select-wrapper">
             <select
-              class="form-field-input form-field-select form-field-filled"
-              id="quantity_{{ item.key | replace: ':', '_' }}"
-              {% if item.quantity >= 10 %}tabindex="-1"{% endif %}
-              aria-label="{{ 'general.general.quantity' | t }}"
-              data-quantity-select
-              data-cartitem-quantity>
-              {% for i in (1..9) %}
-                <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
-                  {{ i }}
-                </option>
+            class="form-field-input form-field-select form-field-filled" 
+            id="quantity_{{ item.key | replace: ':', '_' }}"
+            aria-label="{{ 'general.general.quantity' | t }}"
+            data-quantity-select
+            data-cartitem-quantity
+            >
+              {% for i in (2..50) %}
+                    <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+                      {{ i }}
+                    </option>
               {% endfor %}
-              <option value="10">
-                10+
-              </option>
             </select>
             <label class="form-field-title" for="quantity_{{ item.key | replace: ':', '_' }}">
               {{ 'general.general.quantity' | t }}
@@ -142,7 +139,7 @@
         </div>
 
         <div class="form-field form-field--qty-input {% if item.quantity < 10 %}hidden{% else %}visible{% endif %}">
-          <input
+          <!-- <input
             class="form-field-input form-field-number form-field-filled"
             value="{{ item.quantity }}"
             name="updates[]"
@@ -152,7 +149,28 @@
             {% if item.quantity < 10 %}tabindex="-1"{% endif %}
             aria-label="{{ 'general.general.quantity' | t }}"
             data-quantity-input
-            data-cartitem-quantity>
+            data-cartitem-quantity> -->
+          <!-- <label class="form-field-title" for="updates_{{ item.key }}">
+            {{ 'general.general.quantity' | t }}
+          </label> -->
+          <select
+          class="form-field-input form-field-number form-field-filled"
+          value="{{ item.quantity }}"
+          name="updates[]"
+          id="updates_{{ item.key }}"
+          type="text"
+          pattern="\d*"
+          {% if item.quantity < 10 %}tabindex="-1"{% endif %}
+          aria-label="{{ 'general.general.quantity' | t }}"
+          data-quantity-input
+          data-cartitem-quantity
+          >
+            {% for i in (2..50) %}
+                    <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
+                      {{ i }}
+                    </option>
+              {% endfor %}
+          </select>
           <label class="form-field-title" for="updates_{{ item.key }}">
             {{ 'general.general.quantity' | t }}
           </label>
